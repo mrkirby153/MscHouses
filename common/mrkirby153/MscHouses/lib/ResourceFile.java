@@ -13,5 +13,5 @@ import net.minecraft.util.ResourceLocation;
 public class ResourceFile {
 	
 	public static ResourceLocation houseGen_Img = new ResourceLocation("mschouses", "textures/gui/BlockHouseGen.png");
-
+	public static ResourceLocation houseGen_loc_base = new ResourceLocation("mschouses", "generation/");
 }
