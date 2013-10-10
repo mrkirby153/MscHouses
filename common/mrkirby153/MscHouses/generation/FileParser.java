@@ -28,13 +28,13 @@ public class FileParser {
 		}
 	}
 	
-	public static int[][][][][] parseFile(String contents){
+	public static int[][] parseFile(String contents){
 		String[] coordinateChunk = contents.split(";");
-		int[][][][][] return_value;
+		int[][] return_value;
 		for(int i=0; i < coordinateChunk.length; i++){
 			// Split into x, y, z, id+metadata
 			String[] coordinateParts = coordinateChunk[i].split(":");
-			return_value = new int[coordinateParts.length][coordinateParts.length][coordinateParts.length][coordinateParts.length][coordinateParts.length];
+			return_value = new int[coordinateParts.length][coordinateParts.length];
 			String id = coordinateParts[3];
 			String[] blockAndMeta = id.split(",");
 			int x = Integer.parseInt(coordinateParts[0]);
@@ -42,24 +42,24 @@ public class FileParser {
 			int z = Integer.parseInt(coordinateParts[2]);
 			int block_id = Integer.parseInt(id.substring(0, id.length()-2));
 			int block_meta = Integer.parseInt(blockAndMeta[2]);
-			return_value[i][0][0][0][0] = x;
-			return_value[0][i][0][0][0] = y;
-			return_value[0][0][i][0][0] = z;
-			return_value[0][0][0][i][0] = block_id;
-			return_value[0][0][0][0][i] = block_meta;
+			return_value[i][0] = x;
+			return_value[i][1] = y;
+			return_value[i][2] = z;
+			return_value[i][3] = block_id;
+			return_value[i][4] = block_meta;
 			return return_value;
 		}
 		
 		return null;
 	}
 	
-	public static int[][][][][] parseFile(String contents, int materialId){
+	public static int[][] parseFile(String contents, int materialId){
 		String[] coordinateChunk = contents.split(";");
-		int[][][][][] return_value;
+		int[][] return_value;
 		for(int i=0; i < coordinateChunk.length; i++){
 			// Split into x, y, z, id+metadata
 			String[] coordinateParts = coordinateChunk[i].split(":");
-			return_value = new int[coordinateParts.length][coordinateParts.length][coordinateParts.length][coordinateParts.length][coordinateParts.length];
+			return_value = new int[coordinateParts.length][coordinateParts.length];
 			String id = coordinateParts[3];
 			String[] blockAndMeta = id.split(",");
 			int x = Integer.parseInt(coordinateParts[0]);
@@ -72,11 +72,11 @@ public class FileParser {
 				block_id = Integer.parseInt(id.substring(0, id.length()-2));
 			}
 			int block_meta = Integer.parseInt(blockAndMeta[2]);
-			return_value[i][0][0][0][0] = x;
-			return_value[0][i][0][0][0] = y;
-			return_value[0][0][i][0][0] = z;
-			return_value[0][0][0][i][0] = block_id;
-			return_value[0][0][0][0][i] = block_meta;
+			return_value[i][0] = x;
+			return_value[i][1] = y;
+			return_value[i][2] = z;
+			return_value[i][3] = block_id;
+			return_value[i][4] = block_meta;
 			return return_value;
 		}
 		
