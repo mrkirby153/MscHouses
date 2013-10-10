@@ -7,13 +7,13 @@ import java.io.FileReader;
 
 
 public class FileParser {
-	
-	public static String getFileContents(String fileName) throws FileNotFoundException{
+
+	public static String getFileContents(String fileLocation){
 		String contents = "";
-		File file = new File(fileName);
+		File file = new File(fileLocation);
 		if(file.exists()){
 			try{
-				BufferedReader br = new BufferedReader(new FileReader(fileName));
+				BufferedReader br = new BufferedReader(new FileReader(fileLocation));
 				String strLine;
 				while((strLine = br.readLine()) != null){
 					contents += strLine;
@@ -22,13 +22,12 @@ public class FileParser {
 			}catch(Exception e){
 				System.out.println(e.getMessage());
 			}
-			return contents;
-		}else{
-			throw new FileNotFoundException();
 		}
+		return contents;
 	}
-	
-	public static int[][] parseFile(String contents){
+
+	public static int[][] parseFile(String fileLocation){
+		String contents = getFileContents(fileLocation);
 		String[] coordinateChunk = contents.split(";");
 		int[][] return_value;
 		for(int i=0; i < coordinateChunk.length; i++){
@@ -53,7 +52,8 @@ public class FileParser {
 		return null;
 	}
 	
-	public static int[][] parseFile(String contents, int materialId){
+	public static int[][] parseFile(String fileLocation, int materialId){
+		String contents = getFileContents(fileLocation);
 		String[] coordinateChunk = contents.split(";");
 		int[][] return_value;
 		for(int i=0; i < coordinateChunk.length; i++){
@@ -72,16 +72,26 @@ public class FileParser {
 				block_id = Integer.parseInt(id.substring(0, id.length()-2));
 			}
 			int block_meta = Integer.parseInt(blockAndMeta[2]);
-			return_value[i][0] = x;
-			return_value[i][1] = y;
-			return_value[i][2] = z;
-			return_value[i][3] = block_id;
-			return_value[i][4] = block_meta;
+			return_value[0][i] = x;
+			return_value[1][i] = y;
+			return_value[2][i] = z;
+			return_value[3][i] = block_id;
+			return_value[4][i] = block_meta;
 			return return_value;
 		}
-		
+
 		return null;
 	}
 	
-	
+	public static boolean isSpecal(String fileLocation){
+		String contents = getFileContents(fileLocation);
+		if(contents.contains("X")){
+			return true;
+		}else if(contents.contains("x")){
+			return true;
+		}
+		return false;
+	}
+
+
 }
