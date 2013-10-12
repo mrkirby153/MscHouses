@@ -78,6 +78,7 @@ public class MscHouses {
 	public static CommonProxy proxy;
 	public static MscHousesConfiguration config;
 	public static boolean isPlayerSneaking;
+	
 
 	public static Block OreCopper;
 	public static Block BlockHouseGenerator;
