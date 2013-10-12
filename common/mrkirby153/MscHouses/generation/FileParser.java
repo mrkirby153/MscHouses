@@ -2,10 +2,12 @@ package mrkirby153.MscHouses.generation;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 
 public class FileParser {
+
 
 	public static String getFileContents(String fileLocation){
 		String contents = "";
@@ -29,7 +31,7 @@ public class FileParser {
 		String contents = getFileContents(fileLocation);
 		String[] coordinateChunk = contents.split(";");
 		int[][] return_value;
-		for(int i=0; i < coordinateChunk.length;){
+		for(int i=0; i < coordinateChunk.length; i++){
 			// Split into x, y, z, id+metadata
 			String[] coordinateParts = coordinateChunk[i].split(":");
 			return_value = new int[coordinateParts.length][coordinateParts.length];
@@ -55,7 +57,7 @@ public class FileParser {
 		String contents = getFileContents(fileLocation);
 		String[] coordinateChunk = contents.split(";");
 		int[][] return_value;
-		for(int i=0; i < coordinateChunk.length;){
+		for(int i=0; i < coordinateChunk.length; i++){
 			// Split into x, y, z, id+metadata
 			String[] coordinateParts = coordinateChunk[i].split(":");
 			return_value = new int[coordinateParts.length][coordinateParts.length];
