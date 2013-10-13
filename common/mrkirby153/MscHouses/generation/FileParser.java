@@ -108,7 +108,7 @@ public class FileParser {
 				lines.add(line);
 			}
 			var1 = lines.toArray(new String[0]);
-			return_value = new int[var1.length][var1.length];
+			return_value = new int[5][var1.length];
 			// Split File
 			for(int i = 0; i < var1.length; i++){
 				String[] split = var1[i].split(":");
