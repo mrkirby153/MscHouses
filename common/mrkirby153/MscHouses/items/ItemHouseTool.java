@@ -101,6 +101,9 @@ public class ItemHouseTool extends Item {
 					generation = houses.toArray(new String[0]);
 					reader.close();
 					Generation.generate(generation, modifyerMaterial, world, p.blockX, p.blockY, p.blockZ, fileName);
+					inventory.setInventorySlotContents(0, null);
+					inventory.setInventorySlotContents(1, null);
+					inventory.setInventorySlotContents(2, null);
 				}catch(Exception e){
 					e.printStackTrace();
 				}
