@@ -2,7 +2,6 @@ package mrkirby153.MscHouses.generation;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,8 +10,6 @@ import mrkirby153.MscHouses.core.MscHouses;
 
 
 public class FileParser {
-
-
 	public static String getFileContents(String fileLocation){
 		String contents = "";
 		File file = new File(fileLocation);
@@ -35,7 +32,7 @@ public class FileParser {
 		/*	String contents = getFileContents(fileLocation);
 		String[] coordinateChunk = contents.split(";");
 		int[][] return_value;
-		for(int i=0; i < coordinateChunk.length; i++){
+		for(int i=0; i < coordinateChunk.length;){
 			// Split into x, y, z, id+metadata
 			String[] coordinateParts = coordinateChunk[i].split(":");
 			return_value = new int[coordinateParts.length][coordinateParts.length];
