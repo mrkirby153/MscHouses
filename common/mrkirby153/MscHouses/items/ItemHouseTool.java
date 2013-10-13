@@ -1,13 +1,15 @@
 package mrkirby153.MscHouses.items;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
 
 import mrkirby153.MscHouses.api.IHouseItem;
 import mrkirby153.MscHouses.api.MaterialRegistry;
 import mrkirby153.MscHouses.configuration.ConfigurationSettings;
 import mrkirby153.MscHouses.core.MscHouses;
-import mrkirby153.MscHouses.lib.ResourceFile;
-import net.minecraft.client.Minecraft;
+import mrkirby153.MscHouses.generation.Generation;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -15,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -74,33 +77,40 @@ public class ItemHouseTool extends Item {
 
 		// Get modifier material
 		modifyerMaterial = MaterialRegistry.materialLookup(inventory.getStackInSlot(2).getItemDamage());
-		
+
 		// Run verifications on the module
 		if(inventory.getStackInSlot(0).getItem() instanceof IHouseItem){
 			((IHouseItem)inventory.getStackInSlot(0).getItem()).geneateInit(world, p.blockX, p.blockY, p.blockZ);
 		}else{
 			if(inventory.getStackInSlot(0).getItem() == MscHouses.moduel){
-				ItemModuel module = (ItemModuel) inventory.getStackInSlot(0).getItem();
-				String fileName = module.moduel_name[inventory.getStackInSlot(0).getItemDamage()];
-				String filePath = ResourceFile.houseGen_loc_base + fileName+".house";
-				System.out.println("Expected generation file at: "+filePath);
-				File file = new File(filePath);
-				if(!file.exists()) System.out.println("File does not exist!");
+				try{
+					ItemModuel module = (ItemModuel) inventory.getStackInSlot(0).getItem();
+					String fileName = module.module_name[inventory.getStackInSlot(0).getItemDamage()];
+					BufferedReader reader = new BufferedReader(new FileReader(MscHouses.getConfigDir() + "/MscHouses/Houses/"+fileName+".house"));
+					String line = null;
+					String[] generation;
+					ArrayList<String> houses = new ArrayList<String>();
+					while((line = reader.readLine()) != null){
+						if(line.startsWith("#"))
+							continue;
+						if(line.isEmpty())
+							continue;
+						houses.add(line);
+					}
+					generation = new String[houses.toArray(new String[0]).length];
+					generation = houses.toArray(new String[0]);
+					reader.close();
+					Generation.generate(generation, modifyerMaterial, world, p.blockX, p.blockY, p.blockZ, fileName);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 			}
 		}
 
 		return item;
 	}
 
-	private void buildHouse(int moduelId, int materialId, int x, int y, int z, World world){
-		switch(moduelId){
-		case 1: MscHouses.h.hut(x, y, z, world, materialId); break;
-		case 2: MscHouses.h.ninebynine(world, x, y, z, materialId); break;
-		case 3: MscHouses.h.ninbynineDelux(world, x, y, z, materialId); break;
-		case 4: MscHouses.h.netherAlter(world, x, y, z); break;
-		case 5: MscHouses.h.enchanter(world, x, y, z); break;
-		}
-	}
+
 
 	@Override
 	@SideOnly(Side.CLIENT)
