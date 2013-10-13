@@ -94,6 +94,7 @@ public class MscHouses {
 	public static ArrayList<Integer> blacklisted_ids = new ArrayList<Integer>();
 
 	public static String blacklisted_items_string;
+	
 
 	@EventHandler
 	public void invalidFingerprint(FMLFingerprintViolationEvent event) {
@@ -110,7 +111,6 @@ public class MscHouses {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		config = new MscHousesConfiguration(new File(event.getModConfigurationDirectory(), "MscHouses/main.conf"));
-		
 		try{
 			config.load();
 			Property oreCopperId = config.get(Configuration.CATEGORY_BLOCK, "copperOre.id", BlockId.ORE_COPPER_DEFAULT);
@@ -161,7 +161,7 @@ public class MscHouses {
 			//Check version
 			Version.check();
 			//Defines Blocks
-
+			HouseManager.downloadInit();
 			OreCopper = new BlockCopperOre(oreCopperId.getInt()).setUnlocalizedName(Strings.BLOCK_ORE_COPPER_NAME);
 			BlockHouseGenerator = new BlockHouseGenerator(houseGenId.getInt()).setUnlocalizedName(Strings.BLOCK_HOUSE_GEN_NAME);
 			//Defines Items
@@ -209,6 +209,10 @@ public class MscHouses {
 
 	public static String getMCVersion(){
 		return Loader.instance().getMinecraftModContainer().getVersion();
+	}
+	
+	public static File getConfigDir(){
+		return Loader.instance().getConfigDir();
 	}
 
 }

@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import mrkirby153.MscHouses.core.MscHouses;
 
 
 public class FileParser {
@@ -27,8 +31,8 @@ public class FileParser {
 		return contents;
 	}
 
-	public static int[][] parseFile(String fileLocation){
-		String contents = getFileContents(fileLocation);
+	public static int[][] parseFile(String[] house, String fileName){
+		/*	String contents = getFileContents(fileLocation);
 		String[] coordinateChunk = contents.split(";");
 		int[][] return_value;
 		for(int i=0; i < coordinateChunk.length; i++){
@@ -49,48 +53,89 @@ public class FileParser {
 			return_value[i][4] = block_meta;
 			return return_value;
 		}
-		
-		return null;
-	}
-	
-	public static int[][] parseFile(String fileLocation, int materialId){
-		String contents = getFileContents(fileLocation);
-		String[] coordinateChunk = contents.split(";");
-		int[][] return_value;
-		for(int i=0; i < coordinateChunk.length; i++){
-			// Split into x, y, z, id+metadata
-			String[] coordinateParts = coordinateChunk[i].split(":");
-			return_value = new int[coordinateParts.length][coordinateParts.length];
-			String id = coordinateParts[3];
-			String[] blockAndMeta = id.split(",");
-			int x = Integer.parseInt(coordinateParts[0]);
-			int y = Integer.parseInt(coordinateParts[1]);
-			int z = Integer.parseInt(coordinateParts[2]);
-			int block_id = 0;
-			if(id.substring(0, id.length()-2).equalsIgnoreCase("X")){
-				block_id = materialId;
-			}else{
-				block_id = Integer.parseInt(id.substring(0, id.length()-2));
-			}
-			int block_meta = Integer.parseInt(blockAndMeta[2]);
-			return_value[0][i] = x;
-			return_value[1][i] = y;
-			return_value[2][i] = z;
-			return_value[3][i] = block_id;
-			return_value[4][i] = block_meta;
-			return return_value;
-		}
 
+		return null;*/
+		int[][] return_value;
+		try{
+			BufferedReader reader = new BufferedReader(new FileReader(MscHouses.getConfigDir() + "/MscHouses/Houses/"+fileName+".house"));
+			String line = null;
+			ArrayList<String> lines = new ArrayList<String>();
+			String[] var1;
+			while((line = reader.readLine()) != null){
+				if(line.startsWith("#"))
+					continue;
+				if(line.isEmpty())
+					continue;
+				lines.add(line);
+			}
+			var1 = lines.toArray(new String[0]);
+			return_value = new int[5][var1.length];
+			// Split File
+			for(int i = 0; i < var1.length; i++){
+				String[] split = var1[i].split(":");
+				String[] blockAndMeta = split[3].split(";");
+				int x = Integer.parseInt(split[0]);
+				int y = Integer.parseInt(split[1]);
+				int z = Integer.parseInt(split[2]);
+				int blockId = Integer.parseInt(blockAndMeta[0]);
+				int meta = Integer.parseInt(blockAndMeta[1]);
+
+				return_value[0][i] = x;
+				return_value[1][i] = y;
+				return_value[2][i] = z;
+				return_value[3][i] = blockId;
+				return_value[4][i] = meta;
+				return return_value;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		return null;
 	}
-	
-	public static boolean isSpecal(String fileLocation){
-		String contents = getFileContents(fileLocation);
-		if(contents.contains("X")){
-			return true;
-		}else if(contents.contains("x")){
-			return true;
+
+	public static int[][] parseFile(String[] house, int materialId, String fileName){
+		int[][] return_value;
+		try{
+			BufferedReader reader = new BufferedReader(new FileReader(MscHouses.getConfigDir() + "/MscHouses/Houses/"+fileName+".house"));
+			String line = null;
+			ArrayList<String> lines = new ArrayList<String>();
+			String[] var1;
+			while((line = reader.readLine()) != null){
+				if(line.startsWith("#"))
+					continue;
+				if(line.isEmpty())
+					continue;
+				lines.add(line);
+			}
+			var1 = lines.toArray(new String[0]);
+			return_value = new int[var1.length][var1.length];
+			// Split File
+			for(int i = 0; i < var1.length; i++){
+				String[] split = var1[i].split(":");
+				String[] blockAndMeta = split[3].split(";");
+				int x = Integer.parseInt(split[0]);
+				int y = Integer.parseInt(split[1]);
+				int z = Integer.parseInt(split[2]);
+				int blockId = Integer.parseInt(blockAndMeta[0]);
+				int meta = Integer.parseInt(blockAndMeta[1]);
+
+				return_value[0][i] = x;
+				return_value[1][i] = y;
+				return_value[2][i] = z;
+				return_value[3][i] = blockId;
+				return_value[4][i] = meta;
+				return return_value;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
-		return false;
+		return null;
+	}
+
+	public static boolean isSpecal(String[] array){
+		if(Arrays.asList(array).contains("X"))
+			return true;
+		else
+			return false;
 	}
 }

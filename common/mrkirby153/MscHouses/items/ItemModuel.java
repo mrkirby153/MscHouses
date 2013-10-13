@@ -1,5 +1,8 @@
 package mrkirby153.MscHouses.items;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import mrkirby153.MscHouses.core.MscHouses;
@@ -23,13 +26,13 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 public class ItemModuel extends Item{
-	private  final String[] moduelFileName = { "moduel_base", "moduel_hut", "moduel_9x9", "moduel_Deluxe9x9", "moduel_netheralter", "moduel_ench"};
 	/** List of all moduel names */
-	public final String[] moduel_name = { "Base", "Hut", "Nine By Nine", "Nine by Nine Deluxe", "Nether Alter", "Enchanter"};
+	public String[] module_name;
 	@SideOnly(Side.CLIENT)
 	private Icon[] field_94594_d;
 	public ItemModuel(int par1) {
 		super(par1);
+		this.makeModules();
 		this.setCreativeTab(MscHouses.tabHouse_moduel);
 		this.setHasSubtypes(true);
 		this.setMaxDamage(0);
@@ -45,10 +48,10 @@ public class ItemModuel extends Item{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister par1IconRegister) {
-		this.field_94594_d = new Icon[moduelFileName.length];
+		this.field_94594_d = new Icon[module_name.length];
 
-		for(int i =0; i < moduelFileName.length; i++){
-			this.field_94594_d[i] = par1IconRegister.registerIcon("mschouses:" + moduelFileName[i]);
+		for(int i =0; i < module_name.length; i++){
+			this.field_94594_d[i] = par1IconRegister.registerIcon("mschouses:module");
 		}
 	}
 
@@ -57,7 +60,7 @@ public class ItemModuel extends Item{
 	@SideOnly(Side.CLIENT)
 	public void getSubItems(int itemID, CreativeTabs tab,
 			List itemList) {
-		for(int i = 0; i < moduelFileName.length; i++){
+		for(int i = 0; i < module_name.length; i++){
 			itemList.add(new ItemStack(itemID,1,i));
 		}
 	}
@@ -66,11 +69,29 @@ public class ItemModuel extends Item{
 		return this.getUnlocalizedName(); //+ "." + this.moduelFileName[item.getItemDamage()];
 	}
 
+	public void makeModules(){
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(MscHouses.getConfigDir() + "/MscHouses/Houses/master.txt"));
+			String line = null;
+			ArrayList<String> houses = new ArrayList<String>();
+			while((line = reader.readLine()) != null){
+				if(line.startsWith("#"))
+					continue;
+				if(line.isEmpty())
+					continue;
+				houses.add(line);
+			}
+			module_name = new String[houses.toArray(new String[0]).length];
+			module_name = houses.toArray(new String[0]);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	@Override
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
 		if(par3EntityPlayer.isSneaking() && par1ItemStack.getItemDamage() > 0){
 			if(!par2World.isRemote){
-				par3EntityPlayer.addChatMessage("Successfully Downgraded " + this.moduel_name[par1ItemStack.getItemDamage()] + " to " + this.moduel_name[0]);
+				par3EntityPlayer.addChatMessage("Successfully Downgraded " + this.module_name[par1ItemStack.getItemDamage()] + " to " + this.module_name[0]);
 			}
 			par1ItemStack.setItemDamage(0);
 			par2World.playSoundAtEntity(par3EntityPlayer, "random.fizz", 8, 1);
@@ -82,13 +103,10 @@ public class ItemModuel extends Item{
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
-		switch(itemStack.getItemDamage()){
-			case 0: list.add("Use this to build all moduels"); break;
-			case 1: list.add("Component to build a Hut"); break;
-			case 2: list.add("Component to build a Nine by Nine"); break;
-			case 3: list.add("Component to build a Nine by Nine +"); break;
-			case 4: list.add("Component to build a Nether Alter"); break;
-			case 5: list.add("Component to build an Enchanter"); break;
+		if(itemStack.getItemDamage() == 0){
+			list.add("Compnent to build all other modules");
+		}else{
+			list.add("Component to build an "+module_name[itemStack.getItemDamage()]);
 		}
 	}
 }
